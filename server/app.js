@@ -17,11 +17,19 @@ let products = [
 ]
 
 app.use(express.json());
-app.get('/', (req, res) => {
-    console.log(req);
-    res.send('Hello World');
-});
+app.get('/', async (req, res) => {
+    try {
+        const rows = await sql`SELECT * FROM persons`;
 
+        res.json(rows);
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: 'שגיאה בשליפת הנתונים'
+        });
+    }
+});
 app.get('/about', (req, res) => {
     res.send('about page');
 });
