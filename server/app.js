@@ -1,15 +1,8 @@
 let express = require('express'); 
 let app = express(); 
-let dotenv = require('dotenv');
-const { neon } = require('@neondatabase/serverless');
+const { sql } = require('./db');
 
-let databaseUrl = process.env.DATABASE_URL;
-if(!databaseUrl) {
-    throw new Error('DATABASE_URL is not set');
-}
-const sql = neon(databaseUrl);
 
-dotenv.config();
 let products = [
     {
         id: 1,
