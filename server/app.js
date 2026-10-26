@@ -68,7 +68,7 @@ app.get('/doctors/:id', async (req, res) => {
     const doctor = await sql`SELECT * FROM doctors WHERE doctor_id = ${id} RETURNING *`;
     res.json(doctor);
 });
-//sasasas
+//sasasasdwdwd
 app.listen(4000, () => {
     console.log('Server is running on port 4000');
 });
