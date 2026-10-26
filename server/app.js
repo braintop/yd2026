@@ -6,58 +6,37 @@ const { sql } = require('./db');
 
 app.use(express.json());
 
-app.get('/', async (req, res) => {
-    try {
-        const rows = await sql`SELECT * FROM persons`;
-
-        res.json(rows);
-    } catch (error) {
-        console.error(error);
-
-        res.status(500).json({
-            message: 'שגיאה בשליפת הנתונים'
-        });
-    }
-});
-app.get('/:id', async (req, res) => {
-    try {
-        const rows = await sql`SELECT * FROM persons WHERE person_id = ${req.params.id}`;
-
-        res.json(rows);
-    } catch (error) {
-        console.error(error);
-
-        res.status(500).json({
-            message: 'שגיאה בשליפת הנתונים'
-        });
-    }
-});
-
-app.delete('/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const rows = await sql`DELETE FROM persons WHERE person_id = ${id}`;
-        res.json(rows);
-    } catch (error) {
-        console.error(error);
-    }
+app.get('/cities', async (req, res) => {
+    const cities = await sql`SELECT * FROM cities`;
+    res.json(cities);
 });
 
 
-app.post('/', async (req, res) => {
-    try {
-        const { fullname, city_id } = req.body;
-        console.log(fullname, city_id);
-        const rows = await sql`INSERT INTO persons (fullname, city_id) VALUES (${fullname}, ${city_id}) RETURNING *`;
-        res.json(rows);
-    } catch (error) {
-        console.error(error);
-    }
+app.post('/cities', async (req, res) => {
+    const { city_name } = req.body;
+    const city = await sql`INSERT INTO cities (city_name) VALUES (${city_name})`;
+    res.json(city);
 });
-// תקימו טבלה עם שדה id and city_name 
-// תוסיפו 3 שורות לטבלה 
-// הציכגו ב node crud מלא עובד 
 
+app.put('/cities/:id', async (req, res) => {
+    const { id } = req.params;
+    const { city_name } = req.body;
+    const city = await sql`UPDATE cities SET city_name = ${city_name} WHERE id = ${id}`;
+    res.json(city);
+});
+
+app.delete('/cities/:id', async (req, res) => {
+    const { id } = req.params;
+    const city = await sql`DELETE FROM cities WHERE id = ${id}`;
+    res.json(city);
+});
+
+
+app.get('/cities/:id', async (req, res) => {
+    const { id } = req.params;
+    const city = await sql`SELECT * FROM cities WHERE id = ${id}`;
+    res.json(city);
+});
 
 app.listen(4000, () => {
     console.log('Server is running on port 3000');
