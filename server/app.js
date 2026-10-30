@@ -1,46 +1,15 @@
 let express = require('express'); 
 let app = express(); 
 const { sql } = require('./db');
-
+const cityRoutes = require('./routes/cityRoutes');
 
 
 app.use(express.json());
 
-app.get('/cities', async (req, res) => {
-    const cities = await sql`SELECT * FROM cities`;
-    res.json(cities);
-});
-
-
-app.post('/cities', async (req, res) => {
-    const { city_name } = req.body;
-    const city = await sql`INSERT INTO cities (city_name) VALUES (${city_name})`;
-    res.json(city);
-});
-
-app.put('/cities/:id', async (req, res) => {
-    const { id } = req.params;
-    const { city_name } = req.body;
-    const city = await sql`UPDATE cities SET city_name = ${city_name} WHERE city_id = ${id}`;
-    res.json(city);
-});
-
-app.delete('/cities/:id', async (req, res) => {
-    const { id } = req.params;
-    const city = await sql`DELETE FROM cities WHERE city_id = ${id}`;
-    res.json(city);
-});
-
-
-app.get('/cities/:id', async (req, res) => {
-    const { id } = req.params;
-    const city = await sql`SELECT * FROM cities WHERE city_id = ${id}`;
-    res.json(city);
-});
-
+app.use('/cities', cityRoutes);
 
 app.get('/doctors', async (req, res) => {
-    const doctors = await sql`SELECT * FROM doctors`;
+    const doctors = await sql`SELECT fullname, prices, city_name FROM doctors JOIN cities ON doctors.city_id = cities.city_id`;
     res.json(doctors);
 });
 
@@ -69,6 +38,6 @@ app.get('/doctors/:id', async (req, res) => {
     res.json(doctor);
 });
 //sasasasdwdwd
-app.listen(4000, () => {
-    console.log('Server is running on port 4000');
+app.listen(4001, () => {
+    console.log('Server is running on port 4001');
 });
